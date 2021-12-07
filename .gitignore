@@ -1,0 +1,9 @@
+# Project place file
+/EchoFramework.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+# Wally lock files
+/wally.lock
