@@ -2,8 +2,8 @@
 -- RandomMutiny
 -- December 07, 2021
 
-local ServerStorage = game:GetService("ServerStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local EchoInstaller = require(ServerStorage:WaitForChild("EchoInstaller"))
+local EchoInstaller = require(ServerScriptService:WaitForChild("EchoInstaller"))
 
 EchoInstaller:Install():Start()
