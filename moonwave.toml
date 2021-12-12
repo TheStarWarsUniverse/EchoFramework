@@ -1,0 +1,11 @@
+title = "Echo Framework"
+
+[docusaurus]
+organizationName = "The Star Wars Universe"
+projectName = "Echo Framework"
+
+# From git:
+url = "https://thestarwarsuniverse.github.io"
+
+[footer]
+copyright = "Copyright © 2021 RandomMutiny. Built with Moonwave and Docusaurus"

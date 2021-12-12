@@ -12,7 +12,27 @@
       },
 
       "EchoInstaller": {
-        "$path": "src/EchoInstaller"
+        "$path": "src/EchoInstaller/Installer",
+
+        "EchoClient": {
+          "$path": "src/EchoInstaller/EchoClient"
+        },
+
+        "EchoShared": {
+          "$path": "src/EchoInstaller/EchoShared",
+
+          "Packages": {
+            "$path": "Packages"
+          }
+        },
+
+        "EchoServer": {
+          "$path": "src/EchoInstaller/EchoServer",
+
+          "ServerPackages": {
+            "$path": "ServerPackages"
+          }
+        }
       }
     },
 

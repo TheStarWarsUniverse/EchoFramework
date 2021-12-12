@@ -5,7 +5,9 @@
 		"README.md": true,
 		"src/Runtimes": true,
 		"wally.lock": true,
-		"build": true
+		"build": true,
+		"docs": true,
+		"moonwave.toml": true
 	},
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"
