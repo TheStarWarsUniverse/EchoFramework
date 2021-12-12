@@ -9,7 +9,7 @@ local Echo = require(script:FindFirstAncestor("Echo"))
 	.Name string
 	.Server table?
 	.[any] any
-	@within EchoFramework
+	@within EchoClient
 	Used to define a controller while creating it in "CreateController"
 ]=]
 type ControllerDefine = {
@@ -23,7 +23,7 @@ type ControllerDefine = {
 	.Name string
 	.Server ControllerServer
 	.[any] any
-	@within EchoFramework
+	@within EchoClient
 ]=]
 type Controller = {
 	Name: string,
@@ -35,18 +35,13 @@ type Controller = {
 	@interface ControllerServer
 	.Client Controller
 	.[any] any
-	@within EchoFramework
+	@within EchoClient
 ]=]
 type ControllerServer = {
 	Client: Controller,
 	[any]: any,
 }
 
---[=[
-	@class EchoControllers
-	@server
-	Create Echo controllers, load Echo controllers etc.
-]=]
 local EchoControllers: {[string]: Controller} = {}
 
 function IsControllerExist(ControllerName: string): boolean
@@ -54,10 +49,30 @@ function IsControllerExist(ControllerName: string): boolean
 end
 
 --[=[
-	@client
 	@param ControllerInfo ControllerDefine
 	@return Controller
+	@within EchoClient
 	Constructs a new controller.
+	```lua
+	local EchoController = Echo:CreateController({
+		Name = "EchoController",
+		Server = {}
+	})
+
+	function EchoController.Server:Example(...)
+		print("Example")
+	end
+
+	function EchoController:EchoStart()
+		print("Echo Start")
+	end
+
+	function EchoController:EchoInit()
+		print("Echo Init")
+	end
+
+	return EchoController
+	```
 ]=]
 function Echo:CreateController(ControllerInfo: ControllerDefine): Controller
 	assert(type(ControllerInfo) == "table", "Controller must be a table; got" .. type(ControllerInfo))
@@ -88,8 +103,8 @@ end
 --[=[
 	@param ControllerName string
 	@return Controller?
-	Gets the controller by name. Throws an error if the controller
-	is not found.
+	@within EchoClient
+	Gets the controller by name. Throws an error if the controller is not found.
 ]=]
 function Echo:GetController(ControllerName: string): Controller
 	assert(type(ControllerName) == "string", "ControllerName must be a string; got " .. type(ControllerName))

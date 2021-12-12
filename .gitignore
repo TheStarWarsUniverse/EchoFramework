@@ -7,3 +7,6 @@
 
 # Wally lock files
 /*.wally.lock
+
+# Moonwave built
+/build

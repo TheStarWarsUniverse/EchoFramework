@@ -9,7 +9,7 @@ local Echo = require(script:FindFirstAncestor("Echo"))
 	.Name string
 	.Client table?
 	.[any] any
-	@within EchoFramework
+	@within EchoServer
 	Used to define a service while creating it in "CreateService"
 ]=]
 type ServiceDefine = {
@@ -23,7 +23,7 @@ type ServiceDefine = {
 	.Name string
 	.Client ServiceClient
 	.[any] any
-	@within EchoFramework
+	@within EchoServer
 ]=]
 type Service = {
 	Name: string,
@@ -35,18 +35,13 @@ type Service = {
 	@interface ServiceClient
 	.Server Service
 	.[any] any
-	@within EchoFramework
+	@within EchoServer
 ]=]
 type ServiceClient = {
 	Server: Service,
 	[any]: any,
 }
 
---[=[
-	@class EchoServices
-	@server
-	Create Echo Services, load Echo services etc.
-]=]
 local EchoServices: {[string]: Service} = {}
 
 function IsServiceExist(ServiceName: string): boolean
@@ -54,10 +49,30 @@ function IsServiceExist(ServiceName: string): boolean
 end
 
 --[=[
-	@server
 	@param ServiceInfo ServiceDefine
 	@return Service
+	@within EchoServer
 	Constructs a new service.
+	```lua
+	local EchoService = Echo:CreateService({
+		Name = "EchoService",
+		Client = {}
+	})
+
+	function EchoService.Client:Example(Player: Instance, ...)
+		print("Example")
+	end
+
+	function EchoService:EchoStart()
+		print("Echo Start")
+	end
+
+	function EchoService:EchoInit()
+		print("Echo Init")
+	end
+
+	return EchoService
+	```
 ]=]
 function Echo:CreateService(ServiceInfo: ServiceDefine): Service
 	assert(type(ServiceInfo) == "table", "Service must be a table; got" .. type(ServiceInfo))
@@ -86,9 +101,9 @@ function Echo:CreateService(ServiceInfo: ServiceDefine): Service
 end
 
 --[=[
-	@server
 	@param ServiceName string
-	@return Service
+	@return Service?
+	@within EchoServer
 	Get Services by its name.
 ]=]
 function Echo:GetService(ServiceName: string): Service
