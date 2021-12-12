@@ -18,6 +18,38 @@ local StarterPlayerScripts = StarterPlayer:WaitForChild("StarterPlayerScripts")
 ]=]
 local EchoInstaller = {}
 
+function EchoInstaller:InstallPackage(Package: Instance)
+	-- Validate
+	assert(RunService:IsServer(), "[Echo Framework]: Echo Packages can only be installed in a server script.")
+
+	local Manifest = Package:FindFirstChild("Echo")
+	assert(Manifest and Manifest:IsA("ModuleScript"), "A valid Echo Package must contain a manifest called Echo.json")
+	Manifest = require(Manifest)
+
+	local function MergeModulesfromFolders(Folder, ParentFolder)
+		if not Folder or not ParentFolder then
+			return
+		end
+
+		for _, v in pairs(Folder:GetChildren()) do
+			v.Parent = ParentFolder
+		end
+
+		Folder:Destroy()
+	end
+
+	if Manifest.realm == "server" then
+		MergeModulesfromFolders(Package:FindFirstChild("Workers"), self.EchoServer:WaitForChild("Workers"))
+	elseif Manifest.realm == "client" then
+		MergeModulesfromFolders(Package:FindFirstChild("Workers"), self.EchoClient:WaitForChild("Workers"))
+	elseif Manifest.realm == "shared" then
+		MergeModulesfromFolders(Package:FindFirstChild("Workers"), self.EchoShared:WaitForChild("Workers"))
+	end
+
+	MergeModulesfromFolders(Package:FindFirstChild("Services"), self.EchoServer:WaitForChild("Services"))
+	MergeModulesfromFolders(Package:FindFirstChild("Controllers"), self.EchoClient:WaitForChild("Controllers"))
+end
+
 function EchoInstaller:InstallServer(Parent: Instance)
 	-- Validate
 	assert(RunService:IsServer(), "[Echo Framework]: Echo can only be installed in a server script.")
@@ -101,6 +133,10 @@ function EchoInstaller:Install()
 		self:InstallServer(ServerStorage)
 		self:InstallShared(ReplicatedStorage)
 		self:InstallClient(StarterPlayerScripts)
+		
+		for _, v in pairs(script:WaitForChild("EchoPackages"):GetChildren()) do
+			self:InstallPackage(v)
+		end
 	end
 	return self
 end

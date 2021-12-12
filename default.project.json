@@ -32,6 +32,10 @@
           "ServerPackages": {
             "$path": "ServerPackages"
           }
+        },
+
+        "EchoPackages": {
+          "$path": "src/EchoInstaller/EchoPackages"
         }
       }
     },
