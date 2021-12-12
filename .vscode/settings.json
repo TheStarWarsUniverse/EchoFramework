@@ -2,10 +2,10 @@
 	"files.exclude": {
 		".vscode": true,
 		".gitignore": true,
-		"README.md": true
+		"README.md": true,
 		"src/Runtimes": true,
-		"src/EchoInstaller/EchoServer/wally.lock": true,
-		"src/EchoInstaller/EchoShared/wally.lock": true
+		"wally.lock": true,
+		"build": true
 	},
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"

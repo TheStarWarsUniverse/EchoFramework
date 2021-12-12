@@ -14,40 +14,71 @@ local RemoteFunction = Instance.new("RemoteFunction", NetworkFolder)
 
 local Connections = {}
 
+--[=[
+	@param Name string
+	@param Function function
+	@within EchoServer
+	Connects a function to the signal, which will be called anytime the signal is fired.
+]=]
 function Echo:Connect(Name: string, Function)
 	assert(type(Function) == "function", "Function must be a function.")
 	assert(not Connections[Name], "Function already exist.")
 	Connections[Name] = Function
 end
 
+--[=[
+	@param Name string
+	@within EchoServer
+	Disconnects a function from listening to remote event.
+]=]
 function Echo:Disconnect(Name: string)
 	Connections[Name] = nil
 end
 
-function Echo:FireClient(Client: Instance, Function: string, ...)
-	RemoteEvent:FireClient(Client, Function, ...)
+--[=[
+	@param Client Client Instance
+	@param Name string
+	@param [any] any?
+	@within EchoServer
+	Fires the signal at the specified client with any arguments.
+]=]
+function Echo:FireClient(Client: Instance, Name: string, ...)
+	RemoteEvent:FireClient(Client, Name, ...)
 end
 
-function Echo:FireAllClients(Function: string, ...)
-	RemoteEvent:FireAllClients(Function, ...)
+--[=[
+	@param Name string
+	@param [any] any?
+	@within EchoServer
+	Fires the signal at the clients with any arguments.
+]=]
+function Echo:FireAllClients(Name: string, ...)
+	RemoteEvent:FireAllClients(Name, ...)
 end
 
-function Echo:InvokeClient(Client: Instance, Function: string, ...)
-	return RemoteFunction:InvokeClient(Client, Function, ...)
+--[=[
+	@param Client Client Instance
+	@param Name string
+	@param [any] any?
+	@within EchoServer
+	Invoke the signal at the client with any arguments and expected return from the client.
+]=]
+function Echo:InvokeClient(Client: Instance, Name: string, ...)
+	return RemoteFunction:InvokeClient(Client, Name, ...)
 end
 
-RemoteEvent.OnServerEvent:Connect(function(Player: Instance, Function: string, ...)
-	if Connections[Function] then
-		Connections[Function](Player, Function, ...)
+RemoteEvent.OnServerEvent:Connect(function(Player: Instance, Name: string, ...)
+	if Connections[Name] then
+		Connections[Name](Player, ...)
 	else
 		print(Connections)
 		Player:Kick("Nice try.")
 	end
 end)
 
-function RemoteFunction.OnServerInvoke(Player: Instance, Function: string, ...)
-	if Connections[Function] then
-		Connections[Function](Player, Function, ...)
+function RemoteFunction.OnServerInvoke(Player: Instance, Name: string, ...)
+	if Connections[Name] then
+		Connections[Name](Player, ...)
 	else
 		Player:Kick("Nice try.")
 	end
