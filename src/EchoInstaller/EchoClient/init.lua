@@ -1,13 +1,18 @@
+local Players = game:GetService("Players")
 -- EchoClient
 -- RandomMutiny
 -- December 09, 2021
+
+local Players = game:GetService("Players")
 
 --[=[
 	@class EchoClient
 	@client
 	The client script of Echo framework.
 ]=]
-local EchoClient = {}
+local EchoClient = {
+	Player = Players.LocalPlayer
+}
 
 function EchoClient:LoadFunctions()
 	for _, v in pairs(script:WaitForChild("Functions"):GetChildren()) do
