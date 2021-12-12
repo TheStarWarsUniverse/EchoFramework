@@ -6,4 +6,4 @@
 /*.rbxl.lock
 
 # Wally lock files
-/wally.lock
+/*.wally.lock

@@ -3,22 +3,17 @@
   "tree": {
     "$className": "DataModel",
 
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ReplicatedStorage"
-    },
-
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "$ignoreUnknownInstances": true,
-      "$path": "src/ServerScriptService"
-    },
 
-    "ServerStorage": {
-      "$className": "ServerStorage",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ServerStorage"
+      "ServerRuntime": {
+        "$path": "src/Runtimes/Server"
+      },
+
+      "EchoInstaller": {
+        "$path": "src/EchoInstaller"
+      }
     },
 
     "StarterPlayer": {
@@ -28,7 +23,10 @@
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "$ignoreUnknownInstances": true,
-        "$path": "src/StarterPlayerScripts"
+
+        "ClientRuntime": {
+          "$path": "src/Runtimes/Client"
+         }
       }
     }
   }
