@@ -1,6 +1,6 @@
 -- EchoInstaller
 -- RandomMutiny
--- December 08, 2021
+-- December 21, 2021
 
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -14,10 +14,25 @@ local StarterPlayerScripts = StarterPlayer:WaitForChild("StarterPlayerScripts")
 	@class EchoInstaller
 	@server
 	@client
-	The class manage the installation of the Echo Framework
+	The class manage the installation of the Echo Framework.
+
+	The easilest way to install & start is
+	```lua
+	EchoInstaller:Install():Start()
+	```
 ]=]
 local EchoInstaller = {}
 
+--[=[
+	@param Package Instance -- The location of the package.
+	@return void
+	@within EchoInstaller
+	@server
+	Install the packages to its own place, you can install it easiler by
+	```lua
+	EchoInstaller:Install()
+	```
+]=]
 function EchoInstaller:InstallPackage(Package: Instance)
 	-- Validate
 	assert(RunService:IsServer(), "[Echo Framework]: Echo Packages can only be installed in a server script.")
@@ -50,6 +65,16 @@ function EchoInstaller:InstallPackage(Package: Instance)
 	MergeModulesfromFolders(Package:FindFirstChild("Controllers"), self.EchoClient:WaitForChild("Controllers"))
 end
 
+--[=[
+	@param Parent Instance -- The location of targeted installation path.
+	@return void
+	@within EchoInstaller
+	@server
+	Install the server script to its own place, you can install it easiler by
+	```lua
+	EchoInstaller:Install()
+	```
+]=]
 function EchoInstaller:InstallServer(Parent: Instance)
 	-- Validate
 	assert(RunService:IsServer(), "[Echo Framework]: Echo can only be installed in a server script.")
@@ -61,6 +86,16 @@ function EchoInstaller:InstallServer(Parent: Instance)
 	self.EchoServer = EchoServer
 end
 
+--[=[
+	@param Parent Instance -- The location of targeted installation path.
+	@return void
+	@within EchoInstaller
+	@server
+	Install the shared script to its own place, you can install it easiler by
+	```lua
+	EchoInstaller:Install()
+	```
+]=]
 function EchoInstaller:InstallShared(Parent: Instance)
 	-- Validate
 	assert(RunService:IsServer(), "[Echo Framework]: Echo can only be installed in a server script.")
@@ -76,6 +111,16 @@ function EchoInstaller:InstallShared(Parent: Instance)
 	self.EchoShared = EchoShared
 end
 
+--[=[
+	@param Parent Instance -- The location of targeted installation path.
+	@return void
+	@within EchoInstaller
+	@server
+	Install the client script to its own place, you can install it easiler by
+	```lua
+	EchoInstaller:Install()
+	```
+]=]
 function EchoInstaller:InstallClient(Parent: Instance)
 	-- Validate
 	assert(RunService:IsServer(), "[Echo Framework]: Echo can only be installed in a server script.")
@@ -88,12 +133,13 @@ function EchoInstaller:InstallClient(Parent: Instance)
 end
 
 --[=[
+	@return void
+	@within EchoInstaller
 	@server
 	@client
-	@within EchoInstaller
-	Start & init the Echo framework.
+	Start & init the Echo framework. Run it by
 	```lua
-		EchoInstaller:Start()
+	EchoInstaller:Start()
 	```
 ]=]
 function EchoInstaller:Start()
@@ -117,14 +163,14 @@ function EchoInstaller:Start()
 end
 
 --[=[
-	@server
-	@client
 	@return EchoInstaller
 	@within EchoInstaller
+	@server
+	@client
 	Installs Echo at ServerStorage, ReplicatedStorage, and StarterPlayerScripts.
-	Returning the Installer for easiler uses.
+	Returning the Installer for easiler uses. Run it by
 	```lua
-		EchoInstaller:Install()
+	EchoInstaller:Install()
 	```
 ]=]
 function EchoInstaller:Install()
