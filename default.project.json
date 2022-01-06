@@ -2,55 +2,55 @@
   "name": "EchoFramework",
   "tree": {
     "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$ignoreUnknownInstances": true,
+
+      "EchoConfiguration": {
+        "$path": "src/EchoConfiguration"
+      },
+
+      "EchoShared": {
+        "$path": "src/EchoShared",
+
+        "Packages": {
+          "$path": "Packages"
+        }
+      }
+    },
 
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "$ignoreUnknownInstances": true,
 
-      "ServerRuntime": {
-        "$path": "src/Runtimes/Server"
+      "EchoServer": {
+        "$path": "src/EchoServer",
+
+        "ServerPackages": {
+          "$path": "ServerPackages"
+        }
       },
 
-      "EchoInstaller": {
-        "$path": "src/EchoInstaller/Installer",
-
-        "EchoClient": {
-          "$path": "src/EchoInstaller/EchoClient"
-        },
-
-        "EchoShared": {
-          "$path": "src/EchoInstaller/EchoShared",
-
-          "Packages": {
-            "$path": "Packages"
-          }
-        },
-
-        "EchoServer": {
-          "$path": "src/EchoInstaller/EchoServer",
-
-          "ServerPackages": {
-            "$path": "ServerPackages"
-          }
-        },
-
-        "EchoPackages": {
-          "$path": "src/EchoInstaller/EchoPackages"
-        }
+      "ServerRuntime": {
+        "$path": "src/Runtimes/Server"
       }
     },
 
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "$ignoreUnknownInstances": true,
-      
+
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "$ignoreUnknownInstances": true,
 
+        "EchoClient": {
+          "$path": "src/EchoClient"
+        },
+        
         "ClientRuntime": {
           "$path": "src/Runtimes/Client"
-         }
+        }
       }
     }
   }

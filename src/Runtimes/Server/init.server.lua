@@ -1,9 +1,7 @@
--- EchoRuntime
+-- ServerRuntime
 -- RandomMutiny
 -- December 07, 2021
 
-local ServerScriptService = game:GetService("ServerScriptService")
+local EchoServer = require(script.Parent:WaitForChild("EchoServer"))
 
-local EchoInstaller = require(ServerScriptService:WaitForChild("EchoInstaller"))
-
-EchoInstaller:Install():Start()
+EchoServer:LoadScripts():Start()

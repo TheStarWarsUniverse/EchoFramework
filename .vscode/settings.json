@@ -1,13 +1,6 @@
 {
 	"files.exclude": {
-		".vscode": true,
-		".gitignore": true,
-		"README.md": true,
-		"src/Runtimes": true,
-		"wally.lock": true,
-		"build": true,
-		"docs": true,
-		"moonwave.toml": true
+		
 	},
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"
