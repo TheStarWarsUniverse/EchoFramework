@@ -2,6 +2,6 @@
 -- RandomMutiny
 -- December 07, 2021
 
-local EchoServer = require(script.Parent:WaitForChild("EchoServer"))
+local Echo = require(script.Parent:WaitForChild("Echo"))
 
-EchoServer:LoadScripts():Start()
+Echo:LoadScripts():Start()

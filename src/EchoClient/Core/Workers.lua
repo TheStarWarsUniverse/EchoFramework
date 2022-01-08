@@ -1,21 +1,24 @@
 -- Workers
 -- RandomMutiny
--- December 30, 2021
+-- January 08, 2022
 
-local EchoClient = require(script:FindFirstAncestor("EchoClient"))
-EchoClient.Workers = {}
+local Echo = require(script:FindFirstAncestor("Echo"))
+Echo.Workers = {}
 
-EchoClient:OnLoad(function()
-	EchoClient:DebugLog("***** LOADING WORKERS *****")
-
-	local WorkersFolder = EchoClient.Root:WaitForChild("Workers")
+Echo.OnStart():andThen(function()
+	local WorkersFolder = Echo.Root:WaitForChild("Workers")
 
 	for _, v in pairs(WorkersFolder:GetChildren()) do
 		if v:IsA("ModuleScript") then
-			EchoClient:DebugLog("Loading " .. v.Name)
-			require(v)
+			Echo:DebugLog("Loading Worker \"" .. v.Name .. "\"!")
+
+			Echo.Workers[v.Name] = require(v) or v.Name
+
+			Echo:DebugLog("Worker Loaded \"" .. v.Name .. "\"!")
 		end
 	end
+
+	Echo:DebugLog(Echo:GetLength(Echo.Workers) .. " workers has been loaded!")
 end)
 
-return EchoClient
+return Echo

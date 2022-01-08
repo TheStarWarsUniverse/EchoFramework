@@ -1,18 +1,13 @@
 -- Services
 -- RandomMutiny
--- December 30, 2021
+-- January 08, 2022
 
-local EchoServer = require(script:FindFirstAncestor("EchoServer"))
-EchoServer.Services = {}
+local Echo = require(script:FindFirstAncestor("Echo"))
+Echo.Services = {}
 
-local SIGNAL_MARKER = newproxy(true)
-getmetatable(SIGNAL_MARKER).__tostring = function()
-	return "SIGNAL_MARKER"
-end
-
-local PROPERTY_MARKER = newproxy(true)
-getmetatable(PROPERTY_MARKER).__tostring = function()
-	return "PROPERTY_MARKER"
+local SignalMarker = newproxy(true)
+getmetatable(SignalMarker).__tostring = function()
+	return "SignalMarker"
 end
 
 type ServiceDefine = {
@@ -32,19 +27,19 @@ type ServiceClient = {
 	[any]: any
 }
 
-function EchoServer.CreateSignal()
-	return SIGNAL_MARKER
+function Echo:CreateSignal()
+	return SignalMarker
 end
 
-function EchoServer.CreateProperty(initialValue: any)
-	return {PROPERTY_MARKER, initialValue}
+function Echo:GetService(ServiceName: string): Service?
+	return self.Services[ServiceName]
 end
 
-function EchoServer:CreateService(ServiceDefine: ServiceDefine): Service
-	self:Assert(type(ServiceDefine) == "table", "Service must be a table!")
-	self:Assert(type(ServiceDefine.Name) == "string", "Service.Name must be a string!")
-	self:Assert(#ServiceDefine.Name, "Service.Name cannot be an empty string!")
-	self:Assert(not self.Services[ServiceDefine.Name], "Service \"".. ServiceDefine.Name .."\" already exists!")
+function Echo:CreateService(ServiceDefine: ServiceDefine): Service
+	assert(type(ServiceDefine) == "table", "Service must be a table!")
+	assert(type(ServiceDefine.Name) == "string", "Service.Name must be a string!")
+	assert(#ServiceDefine.Name, "Service.Name cannot be an empty string!")
+	assert(not self.Services[ServiceDefine.Name], "Service \"".. ServiceDefine.Name .."\" already exists!")
 
 	local Service = ServiceDefine
 	Service.EchoComm = self:GetWallyPackages("Comm").ServerComm.new(self.CommFolder, ServiceDefine.Name)
@@ -58,55 +53,52 @@ function EchoServer:CreateService(ServiceDefine: ServiceDefine): Service
 	return Service
 end
 
-function EchoServer:GetService(ServiceName: string): Service?
-	return self.Services[ServiceName]
-end
-
-EchoServer:OnLoad(function()
-	EchoServer:DebugLog("***** LOADING SERVICES *****")
-
-	local ServicesFolder = EchoServer.Root:WaitForChild("Services")
+Echo.OnLoad():andThen(function()
+	local ServicesFolder = Echo.Root:WaitForChild("Services")
 
 	for _, v in pairs(ServicesFolder:GetChildren()) do
 		if v:IsA("ModuleScript") then
-			EchoServer:DebugLog("Loading " .. v.Name)
-			require(v)
+			Echo:DebugLog("Loading Service \"" .. v.Name .. "\"!")
+
+			Echo.Services[v.Name] = require(v)
+
+			Echo:DebugLog("Service loaded \"" .. v.Name .. "\"!")
 		end
 	end
 
-	EchoServer:DebugLog(EchoServer:Length(EchoServer.Services) .. " services has been loaded!")
+	Echo:DebugLog(Echo:GetLength(Echo.Services) .. " services has been loaded!")
 end)
 
-EchoServer:OnStart(function()
-	EchoServer:DebugLog("***** STARTING SERVICES *****")
+Echo.OnStart():andThen(function()
+	for _, Service in pairs(Echo.Services) do
+		Service.Client = Service.Client or {Server = Service}
 
-	for _, Service in pairs(EchoServer.Services) do
 		for k, v in pairs(Service.Client) do
 			if type(v) == "function" then
 				Service.EchoComm:WrapMethod(Service.Client, k)
-			elseif v == SIGNAL_MARKER then
+			elseif v == SignalMarker then
 				Service.Client[k] = Service.KnitComm:CreateSignal(k)
-			elseif type(v) == "table" and v[1] == PROPERTY_MARKER then
-				Service.Client[k] = Service.KnitComm:CreateProperty(k, v[2])
 			end
 		end
 	end
 
-	for _, Service in pairs(EchoServer.Services) do
-		if typeof(Service.EchoInit) == "function" then
-			EchoServer:DebugLog("Initializing " .. Service.Name)
+	for _, Service in pairs(Echo.Services) do
+		if type(Service.EchoInit) == "function" then
+			Echo:DebugLog("Initializing Service \"" .. Service.Name .. "\"!")
 			task.spawn(Service.EchoInit, Service)
+			Echo:DebugLog("Service Initialized \"" .. Service.Name .. "\"!")
 		end
 	end
 
-	for _, Service in pairs(EchoServer.Services) do
-		if typeof(Service.EchoStart) == "function" then
-			EchoServer:DebugLog("Starting " .. Service.Name)
+	for _, Service in pairs(Echo.Services) do
+		if type(Service.EchoStart) == "function" then
+			Echo:DebugLog("Starting Service \"" .. Service.Name .. "\"!")
 			task.spawn(Service.EchoStart, Service)
+			Echo:DebugLog("Service Started \"" .. Service.Name .. "\"!")
 		end
 	end
 
-	EchoServer:DebugLog(EchoServer:Length(EchoServer.Services) .. " services has been started!")
+	Echo:DebugLog(Echo:GetLength(Echo.Services) .. " services has been started!")
 end)
 
-return EchoServer
+return Echo

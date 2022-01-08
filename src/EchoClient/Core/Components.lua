@@ -1,21 +1,24 @@
 -- Components
 -- RandomMutiny
--- December 30, 2021
+-- January 08, 2022
 
-local EchoClient = require(script:FindFirstAncestor("EchoClient"))
-EchoClient.Components = {}
+local Echo = require(script:FindFirstAncestor("Echo"))
+Echo.Components = {}
 
-EchoClient:OnLoad(function()
-	EchoClient:DebugLog("***** LOADING COMPONENTS *****")
+Echo.OnStart():andThen(function()
+	local ComponentsFolder = Echo.Root:WaitForChild("Components")
 
-	local ComponentsFodler = EchoClient.Root:WaitForChild("Components")
-
-	for _, v in pairs(ComponentsFodler:GetChildren()) do
+	for _, v in pairs(ComponentsFolder:GetChildren()) do
 		if v:IsA("ModuleScript") then
-			EchoClient:DebugLog("Loading " .. v.Name)
-			require(v)
+			Echo:DebugLog("Loading Component \"" .. v.Name .. "\"!")
+
+			Echo.Components[v.Name] = require(v) or v.Name
+
+			Echo:DebugLog("Component Loaded \"" .. v.Name .. "\"!")
 		end
 	end
+
+	Echo:DebugLog(Echo:GetLength(Echo.Components) .. " components has been loaded!")
 end)
 
-return EchoClient
+return Echo

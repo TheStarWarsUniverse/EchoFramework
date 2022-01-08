@@ -2,11 +2,11 @@
 -- RandomMutiny
 -- December 31, 2021
 
-local EchoServer = require(script:FindFirstAncestor("EchoServer"))
+local Echo = require(script:FindFirstAncestor("Echo"))
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-EchoServer.CommFolder = Instance.new("Folder", ReplicatedStorage)
-EchoServer.CommFolder.Name = "EchoCommunication"
+Echo.CommFolder = Instance.new("Folder", ReplicatedStorage)
+Echo.CommFolder.Name = "EchoCommunication"
 
-return EchoServer
+return Echo

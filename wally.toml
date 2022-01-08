@@ -6,6 +6,7 @@ realm = "shared"
 
 [dependencies]
 Comm = "sleitnick/comm@0.1.2"
+Promise = "evaera/promise@3.2.1"
+Component = "sleitnick/component@2.3.0"
 
 [server-dependencies]
-Cmdr = "evaera/cmdr@1.8.4"

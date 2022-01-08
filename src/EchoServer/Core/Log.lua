@@ -1,38 +1,18 @@
 -- Log
 -- RandomMutiny
--- December 30, 2021
+-- January 07, 2022
 
-local EchoServer = require(script:FindFirstAncestor("EchoServer"))
+local Echo = require(script:FindFirstAncestor("Echo"))
+Echo.DEBUGLOGS = {}
 
---[=[
-	Throw an error if the provided value resolves to false or nil.
+local RunService = game:GetService("RunService")
 
-	@param Value boolean
-	@param Message string?
-]=]
-function EchoServer:Assert(Value: boolean, Message: string)
-	if not Value then
-		error("[Echo Server]: " .. tostring(Message))
+function Echo:DebugLog(...: any)
+	if RunService:IsStudio() then
+		warn("[ECHO:DEBUG | SERVER]: ", table.concat({...}, " "))
 	end
+
+	table.insert(self.DEBUGLOGS, table.concat({...}, " "))
 end
 
---[=[
-	Print the message when debug mode is on.
-
-	@param Message string
-	@param Type string? -- Error/Warn/nil
-]=]
-function EchoServer:DebugLog(Message: string, Type: string)
-	if self.EchoConfig.DebugMode then
-		if Type == "Error" then
-			error("[Echo Server DEBUG]: " .. tostring(Message))
-		elseif Type == "Warn" then
-			warn("[Echo Server DEBUG]: " .. tostring(Message))
-		else
-			print("[Echo Server DEBUG]: " .. tostring(Message))
-		end
-	end
-end
-
-
-return EchoServer
+return Echo

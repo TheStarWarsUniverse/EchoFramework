@@ -2,9 +2,9 @@
 -- RandomMutiny
 -- January 07, 2022
 
-local EchoClient = require(script:FindFirstAncestor("EchoClient"))
-EchoClient.Controllers = {}
-EchoClient.Services = {}
+local Echo = require(script:FindFirstAncestor("Echo"))
+Echo.Controllers = {}
+Echo.Services = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -24,16 +24,24 @@ type Service = {
 
 local function BuildService(ServiceName: string): Service
 	local Folder = ReplicatedStorage:WaitForChild("EchoCommunication")
-	local ClientComm = EchoClient:GetWallyPackages("Comm").ClientComm.new(Folder, false, ServiceName)
+	local ClientComm = Echo:GetWallyPackages("Comm").ClientComm.new(Folder, false, ServiceName)
 	local Service = ClientComm:BuildObject()
-	EchoClient.Services[ServiceName] = Service
-	return Service 
+	Echo.Services[ServiceName] = Service
+	return Service
 end
 
-function EchoClient:CreateController(ControllerDefine: ControllerDefine): Controller
-	self:Assert(type(ControllerDefine) == "table", "Controller must be a table!")
-	self:Assert(type(ControllerDefine.Name) == "string", "Controller.Name must be a string!")
-	self:Assert(#ControllerDefine.Name, "Controller.Name cannot be an empty string!")
+function Echo:GetService(ServiceName: string): Service?
+	return self.Services[ServiceName] or BuildService(ServiceName)
+end
+
+function Echo:GetController(ControllerName: string): Controller?
+	return self.Controllers[ControllerName]
+end
+
+function Echo:CreateController(ControllerDefine: ControllerDefine): Controller
+	assert(type(ControllerDefine) == "table", "Controller must be a table!")
+	assert(type(ControllerDefine.Name) == "string", "Controller.Name must be a string!")
+	assert(#ControllerDefine.Name, "Controller.Name cannot be an empty string!")
 
 	local Controller = ControllerDefine
 	
@@ -42,48 +50,41 @@ function EchoClient:CreateController(ControllerDefine: ControllerDefine): Contro
 	return Controller
 end
 
-function EchoClient:GetController(ControllerName: string): Controller?
-	return self.Controllers[ControllerName]
-end
-
-function EchoClient:GetService(ServiceName: string): Service?
-	return self.Services[ServiceName] or BuildService(ServiceName)
-end
-
-EchoClient:OnLoad(function()
-	EchoClient:DebugLog("***** LOADING CONTROLLERS *****")
-
-	local ControllersFolder = EchoClient.Root:WaitForChild("Controllers")
+Echo.OnLoad():andThen(function()
+	local ControllersFolder = Echo.Root:WaitForChild("Controllers")
 
 	for _, v in pairs(ControllersFolder:GetChildren()) do
 		if v:IsA("ModuleScript") then
-			EchoClient:DebugLog("Loading " .. v.Name)
-			require(v)
+			Echo:DebugLog("Loading Controller \"" .. v.Name .. "\"!")
+
+			Echo.Controllers[v.Name] = require(v)
+
+			Echo:DebugLog("Controller loaded \"" .. v.Name .. "\"!")
 		end
 	end
 
-	EchoClient:DebugLog(EchoClient:Length(EchoClient.Controllers) .. " controllers has been loaded!")
-	EchoClient:DebugLog(EchoClient:Length(EchoClient.Services) .. " services has been loaded!")
+	Echo:DebugLog(Echo:GetLength(Echo.Controllers) .. " controllers has been loaded!")
+	Echo:DebugLog(Echo:GetLength(Echo.Services) .. " services has been loaded!")
 end)
 
-EchoClient:OnStart(function()
-	EchoClient:DebugLog("***** STARTING CONTROLLERS *****")
-
-	for _, Controller in pairs(EchoClient.Controllers) do
-		if typeof(Controller.EchoInit) == "function" then
-			EchoClient:DebugLog("Initializing " .. Controller.Name)
+Echo.OnStart():andThen(function()
+	for _, Controller in pairs(Echo.Controllers) do
+		if type(Controller.EchoInit) == "function" then
+			Echo:DebugLog("Initializing Controller \"" .. Controller.Name .. "\"!")
 			task.spawn(Controller.EchoInit, Controller)
+			Echo:DebugLog("Controller Initialized \"" .. Controller.Name .. "\"!")
 		end
 	end
 
-	for _, Controller in pairs(EchoClient.Controllers) do
-		if typeof(Controller.EchoStart) == "function" then
-			EchoClient:DebugLog("Starting " .. Controller.Name)
+	for _, Controller in pairs(Echo.Controllers) do
+		if type(Controller.EchoStart) == "function" then
+			Echo:DebugLog("Starting Controller \"" .. Controller.Name .. "\"!")
 			task.spawn(Controller.EchoStart, Controller)
+			Echo:DebugLog("Controller Started \"" .. Controller.Name .. "\"!")
 		end
 	end
-
-	EchoClient:DebugLog(EchoClient:Length(EchoClient.Controllers) .. " controllers has been started!")
+	
+	Echo:DebugLog(Echo:GetLength(Echo.Controllers) .. " controllers has been started!")
 end)
 
-return EchoClient
+return Echo
