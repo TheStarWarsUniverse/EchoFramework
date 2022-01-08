@@ -1,9 +1,7 @@
--- EchoRuntime
+-- ClientRuntime
 -- RandomMutiny
--- December 07, 2021
+-- January 05, 2022
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Echo = require(script.Parent:WaitForChild("Echo"))
 
-local EchoInstaller = require(ReplicatedStorage:WaitForChild("EchoInstaller"))
-
-EchoInstaller:Install():Start()
+Echo:LoadScripts():Start()
