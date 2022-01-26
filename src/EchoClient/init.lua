@@ -6,7 +6,8 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local PackagesFolder = ReplicatedStorage:WaitForChild("Echo"):WaitForChild("Packages")
+local EchoShared = ReplicatedStorage:WaitForChild("Echo")
+local PackagesFolder = EchoShared:WaitForChild("Packages")
 
 local Promise = require(PackagesFolder:WaitForChild("Promise"))
 
@@ -66,8 +67,11 @@ end
 ]=]
 function Echo:LoadScripts()
 	self.Root = script
+	self.SharedRoot = EchoShared
 	self.CoreModules = {}
 	self.Player = Players.LocalPlayer
+
+	self.Configuration = require(self.SharedRoot:WaitForChild("Configuration"))
 
 	require(script:WaitForChild("Core"):WaitForChild("Log"))
 
@@ -111,6 +115,8 @@ function Echo:Start()
 	self.Started = true
 	
 	OnStart:Fire()
+
+	_G.Echo = self
 
 	task.defer(function()
 		OnStart:Destroy()

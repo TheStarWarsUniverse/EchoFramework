@@ -1,0 +1,11 @@
+{
+	"DebugMode": true,
+
+	"AdminLevels": {
+		"Developers": {
+			"CommandGroups": ["Developer", "Debug", "DefaultDebug"],
+			"GroupAccess": {},
+			"UserAccess": {}
+		}
+	}
+}
