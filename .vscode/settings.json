@@ -5,7 +5,8 @@
 		".gitignore": true,
 		"docs": true,
 		".vscode": true,
-		"moonwave.toml": true
+		"moonwave.toml": true,
+		"build": true
 	},
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"

@@ -8,7 +8,7 @@ Echo.DEBUGLOGS = {}
 local RunService = game:GetService("RunService")
 
 function Echo:DebugLog(...: any)
-	if RunService:IsStudio() then
+	if Echo.Configuration.DebugMode then
 		warn("[ECHO:DEBUG | CLIENT]: ", table.concat({...}, " "))
 	end
 

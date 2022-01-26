@@ -6,7 +6,7 @@ sidebar_position: 2
 
 ## Installation
 
-You are recommend to download [Visual Studio Code](https://code.visualstudio.com/), [Rojo](rojo.space) and [Github Desktop](https://desktop.github.com/) to install it easily.
+You are recommend to download [Visual Studio Code](https://code.visualstudio.com/), [Rojo](https://rojo.space) and [Github Desktop](https://desktop.github.com/) to install it easily.
 
 ### Step 0: Requirements
 
