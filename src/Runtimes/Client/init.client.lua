@@ -2,6 +2,6 @@
 -- RandomMutiny
 -- January 05, 2022
 
-local Echo = require(script.Parent:WaitForChild("Echo"))
+local EchoFramework = require(script.Parent:WaitForChild("EchoFramework"))
 
-Echo:LoadScripts():Start()
+EchoFramework:Install():Start()

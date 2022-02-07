@@ -2,28 +2,24 @@
   "name": "EchoFramework",
   "tree": {
     "$className": "DataModel",
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-      "$ignoreUnknownInstances": true,
-
-      "Echo": {
-        "$path": "src/EchoShared",
-
-        "Packages": {
-          "$path": "Packages"
-        }
-      }
-    },
 
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "$ignoreUnknownInstances": true,
 
-      "Echo": {
-        "$path": "src/EchoServer",
+      "EchoFramework": {
+        "$path": "src/EchoFramework",
 
-        "ServerPackages": {
-          "$path": "ServerPackages"
+        "Wally": {
+          "$className": "Folder",
+
+          "Packages": {
+            "$path": "Packages"
+          },
+
+          "ServerPackages": {
+            "$path": "ServerPackages"
+          }
         }
       },
 
@@ -39,10 +35,6 @@
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "$ignoreUnknownInstances": true,
-
-        "Echo": {
-          "$path": "src/EchoClient"
-        },
         
         "ClientRuntime": {
           "$path": "src/Runtimes/Client"
