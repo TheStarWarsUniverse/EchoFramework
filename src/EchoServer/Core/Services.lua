@@ -71,22 +71,22 @@ end)
 
 Echo.OnStart():andThen(function()
 	for _, Service in pairs(Echo.Services) do
+		if type(Service.EchoInit) == "function" then
+			Echo:DebugLog("Initializing Service \"" .. Service.Name .. "\"!")
+			task.spawn(Service.EchoInit, Service)
+			Echo:DebugLog("Service Initialized \"" .. Service.Name .. "\"!")
+		end
+	end
+
+	for _, Service in pairs(Echo.Services) do
 		Service.Client = Service.Client or {Server = Service}
 
 		for k, v in pairs(Service.Client) do
 			if type(v) == "function" then
 				Service.EchoComm:WrapMethod(Service.Client, k)
 			elseif v == SignalMarker then
-				Service.Client[k] = Service.KnitComm:CreateSignal(k)
+				Service.Client[k] = Service.EchoComm:CreateSignal(k)
 			end
-		end
-	end
-
-	for _, Service in pairs(Echo.Services) do
-		if type(Service.EchoInit) == "function" then
-			Echo:DebugLog("Initializing Service \"" .. Service.Name .. "\"!")
-			task.spawn(Service.EchoInit, Service)
-			Echo:DebugLog("Service Initialized \"" .. Service.Name .. "\"!")
 		end
 	end
 
